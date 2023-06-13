@@ -18,7 +18,7 @@ intent = discord.Intents.default()
 intent.members = True
 intent.message_content = True
 
-activity = discord.Activity(type=discord.ActivityType.listening, name="Rammstein - Du Hast ")
+activity = discord.Activity(type=discord.ActivityType.listening, name="nigga ")
 bot = commands.Bot(command_prefix=["+", "ax", "axiom"], activity=activity, intents=intent,  help_command=None)
 bot.remove_command('help')
 
@@ -61,8 +61,7 @@ async def on_message(message):
         return
     msg_content = message.content.lower()
     if any(word in msg_content for word in curseWord):
-        msg = await message.channel.send(f'{message.author} was using banned words `{message.content}`',
-                                         reference=message)
+        msg = await message.channel.send(f'{message.author} was using banned words `{message.content}`',reference=message)
         await asyncio.sleep(10)
         await message.delete()
         await msg.delete()
