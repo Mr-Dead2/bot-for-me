@@ -196,13 +196,13 @@ async def serverinfo(ctx):
 
 @bot.command()
 async def pool(ctx, *, message):
-    channel = bot.get_channel('')
+    channel = bot.get_channel('1119253879721308191')
     mess = ctx.message
     e = discord.Embed(title="pool", description=f"{message}", color=discord.Color.random())
+    await mess.delete()
     msg = await channel.send(embed=e)
     await msg.add_reaction("✔")
     await msg.add_reaction("❌")
-    await mess.delete()
 
 
 
@@ -277,8 +277,7 @@ async def code(ctx, code):
         await ctx.reply(f"{data['status']}")
 
     else:
-        print (f"{res['status']}")
-        await ctx.reply("something wrong")
+        await ctx.reply(f"{data['status']}")
 
 
 @bot.command()
@@ -286,7 +285,16 @@ async def stats(ctx, name):
     headers = {"Authorization": 'de2caa62-205f-4955-95cb-72dec8e1e075'}
     r = requests.get(f"https://fortnite-api.com/v2/stats/br/v2/?name={name}", headers=headers)
     res = r.json()
-    print(res["data"])
+    status= res["status"]
+    data = res["data"]
+    account=data["account"]
+    e= discord.Embed(title=(f"Account {account['name']} statistics"))
+    if status == 200:
+        await ctx.send(embed=e)
+
+    else:
+        await ctx.reply(f"{res['error']}")
+
 
 
 
