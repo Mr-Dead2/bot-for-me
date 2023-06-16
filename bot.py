@@ -288,7 +288,18 @@ async def stats(ctx, name):
     status= res["status"]
     data = res["data"]
     account=data["account"]
-    e= discord.Embed(title=(f"Account {account['name']} statistics"))
+    stats=data["stats"]
+    all=stats["all"]
+    overall=all["overall"]
+    e= discord.Embed(title=(f"Account {account['name']} statistics"), description=(f"User id `{account['id']}`"), color=discord.Color.random())
+    e.add_field(name=("Wnis"), value=(f"{overall['wins']}"), inline=False)
+    e.add_field(name=("Top10"), value=(f"{overall['top10']}"), inline=False)
+    e.add_field(name=("Top25"), value=(f"{overall['top25']}"), inline=False)
+    e.add_field(name=("Kills"), value=(f"{overall['kills']}"), inline=False)
+    e.add_field(name=("Deaths"), value=(f"{overall['deaths']}"), inline=False)
+    e.add_field(name=("Matches"), value=(f"{overall['matches']}"), inline=False)
+    e.add_field(name=("Win Rate"), value=(f"{overall['winRate']}"), inline=False)
+    
     if status == 200:
         await ctx.send(embed=e)
 
