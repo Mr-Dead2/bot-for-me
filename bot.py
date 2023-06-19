@@ -22,7 +22,7 @@ activity = discord.Activity(type=discord.ActivityType.listening, name="nigga ")
 bot = commands.Bot(command_prefix=["+", "ax", "axiom"], activity=activity, intents=intent,  help_command=None)
 bot.remove_command('help')
 
-curseWord = ['fuck', 'nigga', 'kill']
+badwords = ['fuck', 'nigga', 'kill']
 
 
 @bot.event
@@ -59,13 +59,28 @@ async def on_message(message):
     await bot.process_commands(message)
     if message.author.id == bot.user.id:
         return
-    msg_content = message.content.lower()
-    if any(word in msg_content for word in curseWord):
-        msg = await message.channel.send(f'{message.author} was using banned words `{message.content}`',reference=message)
-        await asyncio.sleep(10)
-        await message.delete()
-        await msg.delete()
+    
+    for i in badwords: # Go through the list of bad words;
+        if i in message.content:
+            await message.delete()
+            await message.channel.send(f"{message.author.mention} Don't use that word!")
+            bot.dispatch('profanity', message, i)
+            return # So that it doesn't try to delete the message again, which will cause an error.
+        await bot.process_commands(message)
         
+    if 'https://' in message.content:
+        await message.delete()
+        await message.channel.send(f"{message.author.mention} Don't send links!")
+    else:
+        await bot.process_commands(message)
+
+
+@bot.event
+async def on_profanity(message, word):
+    channel = bot.get_channel(1120265934586777610) # for me it's bot.get_channel(817421787289485322)
+    embed = discord.Embed(title="Profanity Alert!",description=f"{message.author.name} just said ||{word}||", color=discord.Color.blurple()) # Let's make an embed!
+    await channel.send(embed=embed)
+
 
 @bot.command()
 @commands.has_permissions(kick_members=True)
@@ -206,8 +221,6 @@ async def pool(ctx, *, message):
 
 
 
-
-
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def invite(ctx):
@@ -249,7 +262,7 @@ async def help(ctx):
     help_embed.add_field(name='`server`', value=server_help, inline=False)
     help_embed.add_field(name='`pool`', value=pool_help, inline=False)
     help_embed.add_field(name='`info`', value=info_help, inline=False)
-    help_embed.add_field(name='invate', value=invite_help, inline=False)
+    help_embed.add_field(name='`invate`', value=invite_help, inline=False)
     await ctx.send(embed=help_embed)
 
 
