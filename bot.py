@@ -5,13 +5,13 @@ import sys
 import json
 import random
 import requests
+from dotenv import load_dotenv
 from discord.ext import commands
 
 
-with open('./config.json') as f:
-  data = json.load(f)
-  for c in data['botConfig']:
-     print('token: ' + c['token'])
+load_dotenv()
+
+token = os.getenv('DISCORD_TOKEN')
 
 
 intent = discord.Intents.default()
@@ -334,4 +334,4 @@ async def on_command_error(ctx, error):
         print(error)
 
 
-bot.run(c['token'])
+bot.run(token)
